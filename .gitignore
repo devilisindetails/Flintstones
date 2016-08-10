@@ -17,3 +17,9 @@
 coverage
 node_modules/
 npm-debug.log
+public/node_modules
+public/bower_components/iron-*
+public/bower_components/paper-*
+public/bower_components/google-*
+public/bower_components/
+public/app/storage

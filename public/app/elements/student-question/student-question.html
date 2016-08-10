@@ -1,0 +1,107 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/paper-dialog-behavior/paper-dialog-shared-styles.html">
+<link rel="import" href="../../../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="student-question">
+    <template>
+        <style>
+        :host {
+            display: block;
+        }
+        
+        .questionContainer {
+            @apply(--layout-horizontal);
+            @apply(--layout-justified);
+        }
+        </style>
+        <div class="questionContainer">
+            <div>
+                <b>Question</b> : <span>{{questionNumber}}</span>
+            </div>
+            <div>
+                <b>Type </b> : <span>{{questionType}}</span>
+            </div>
+            <div>
+                <b>Marks</b> : <span>{{questionMarks}}</span>
+            </div>
+        </div>
+        <p id="questionDiv" style="word-wrap: break-word;"></p>
+        <paper-button id="ques_image_buttton" on-click="_lightboxshow" style="margin:auto;margin-right:auto;">
+            <iron-image style="height:150px;width:150px;" src={{questionImagepath}} sizing="contain">
+            </iron-image>
+        </paper-button>
+        <!-- <paper-dialog id="viewbox" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+            <iron-image id="questionimage" src={{questionImagepath}} sizing="contain"></iron-image>
+            hii what up
+        </paper-dialog> -->
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'student-question',
+
+            properties: {
+                questionText: {
+                    type: String,
+                    notify: true,
+                    observer: '_questionTextChanged' 
+                },
+                questionImagepath: {
+                    type: String,
+                    notify: true,
+                    observer: '_questionimagepathChanged'
+                },
+                questionNumber: {
+                    type: Number,
+                    notify: true
+                },
+                questionType: {
+                    type: String,
+                    notify: true
+                },
+                questionMarks: {
+                    type: Number,
+                    notify: true
+                },
+                typeofquestion: {
+                    type: Array,
+                    notify: true,
+                    value: ['Single-Choice', 'Multiple-Choice']
+                },
+                typeSelected: {
+                    type: Number,
+                    value: 0,
+                    notify: true,
+                    observer: 'typeSelectedChanged' 
+                }
+            },
+            _lightboxshow: function() {
+                // var dialog = document.getElementById('viewbox');
+                // if (dialog) {
+                //     dialog.open();
+                // }
+                this.domHost.on_dialogopen(this.questionImagepath);
+            },
+            _questionimagepathChanged: function() {
+                if (this.questionImagepath != null && this.questionImagepath != "") {
+                    this.$.ques_image_buttton.style.display = 'block';
+                } else {
+                    this.$.ques_image_buttton.style.display = 'none';
+                }
+            },
+            _questionTextChanged:function(){
+                this.$.questionDiv.innerHTML=this.questionText;
+            },
+            typeSelectedChanged: function(newValue, oldValue) {
+                this.questionType = this.typeofquestion[newValue];
+            }
+        });
+    })();
+    </script>
+</dom-module>
