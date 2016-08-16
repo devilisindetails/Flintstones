@@ -38,9 +38,10 @@
         }
         
         #signin-paper {
-            padding: 10%;
+            padding: 8%;
             border-radius: 2px;
             background: white;
+            height: 80%;
         }
         
         #registerbutton {
@@ -104,7 +105,7 @@
             }
         }
         </style>
-        <paper-material elevation="2" id="signin-paper">
+        <paper-material elevation="1" id="signin-paper">
             <div class="mobHide">
                 <div class="container">
                     <h4>Already have an account?</h4>
@@ -120,28 +121,32 @@
                 <h4>Register Yourself for Free</h4>
             </div>
             <div class="container">
-                <paper-input label="Name" id="registername" class="flex" error-message="Please enter your name" value="{{name}}" required auto-validate></paper-input>
+                <paper-input label="Name" id="registername" class="flex" error-message="Please enter your name" value="{{name}}" minlength="4" maxlength="50"></paper-input>
             </div>
             <div class="container">
-                <gold-email-input label="Email ID" id="registermail" class="flex" error-message="Please enter your email, Ex: abc@xyz.com" value="{{mail}}" required auto-validate></gold-email-input>
+                <gold-email-input label="Email ID" id="registermail" class="flex" error-message="Email like : abc@gmail.com" value="{{mail}}"></gold-email-input>
             </div>
             <div class="container">
                 <paper-input label="Address" id="registeraddress" class="flex" value="{{address}}"></paper-input>
             </div>
             <div class="container">
-                <paper-input label="Mobile" id="registermobile" auto-validate allowed-pattern="[0-9]" char-counter maxlength="10" minlength="10" error-message="Please enter correct mobile number" class="flex" value="{{mobile}}" required auto-validate></paper-input>
+                <paper-input label="Mobile" id="registermobile" allowed-pattern="[0-9]" char-counter maxlength="10" error-message="Your mobile number" class="flex" value="{{mobile}}" required></paper-input>
             </div>
             <div class="container">
                 <paper-button class="okButton" id="registerbutton" on-click="getonboard">Get On Board</paper-button>
             </div>
         </paper-material>
-        <paper-dialog id="createtest_waitDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop modal>
+
+        <!-- Waiting dialog when submitting leads -->
+        <paper-dialog id="postlead_waitDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop modal>
             <div class="centerfield">
                 <paper-spinner id="loadingspinner" active></paper-spinner>
-                Please wait ...
+                <p>Please wait while we are saving your details...</p>
             </div>
         </paper-dialog>
-        <paper-dialog style="border: 3px solid #3F51B5;" class="size-position" id="registerdialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+
+        <!-- Show lead submit successful when posting lead details -->
+        <paper-dialog id="leadsubmit_successful" style="border: 3px solid #3F51B5;" class="size-position" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
             <div style="height:20%;width:80%;">
                 <div class="title">
                     <h1>Welcome aboard</h1>
@@ -154,8 +159,11 @@
                 <paper-button dialog-confirm autofocus class="okButton">OK</paper-button>
             </div>
         </paper-dialog>
+
+
+        <paper-toast id="postlead_incorrecttoast" text="Please fill all the details correctly."></paper-toast>
         <!-- For posting the create test starts here -->
-        <iron-ajax id="createlead_ironajax" url="/api/leads" handle-as="json" content-type='application/json' method="POST" body="{{createlead_postbody}}" on-response="_createleadonResponse" on-error="_createleadonError"></iron-ajax>
+        <iron-ajax id="createlead_ironajax" url="/" handle-as="json" content-type='application/json' method="POST" body="{{createlead_postbody}}" on-response="_createleadonResponse" on-error="_createleadonError"></iron-ajax>
         <!-- For posting the create test ends here -->
     </template>
     <script>
@@ -188,73 +196,115 @@
                 }
             },
 
-            validate: function(value) {
-                return !value;
-            },
+            // validate: function(value) {
+            //     return !value;
+            // },
 
             signin: function() {
                 window.location.href = "/signin";
             },
 
             getonboard: function() {
-                var studentname = document.getElementById('registername').value;
-                var studentmail = document.getElementById('registermail').value;
-                var studentaddress = document.getElementById('registeraddress').value;
-                var studentmobile = document.getElementById('registermobile').value;
 
+                //storing all the values provided by user in local variables
+                // this.createlead_postbody.name = document.getElementById('registername').value;
+                // this.createlead_postbody.mail = document.getElementById('registermail').value;
+                // this.createlead_postbody.address = document.getElementById('registeraddress').value;
+                // this.createlead_postbody.mobile = document.getElementById('registermobile').value;
 
-                if ((studentname == null || studentname == "") && (studentmail == null || studentmail == "")) {
-                    document.getElementById('registername').validate();
-                    document.getElementById('registermail').validate();
-                } else if (studentname == null || studentname == "") {
-                    document.getElementById('registername').validate();
-                } else if (studentmail == null || studentmail == "") {
-                    document.getElementById('registermail').validate();
-                } else if ((studentmobile.length == 0)||(studentmobile.length > 0 && studentmobile.length != 10)) {
-                    document.getElementById('registermobile').validate();
-                } else {
-                    this._createLead();
+                // if(this.$.registername.value == (null || "")){
+                //     this.$.registername.invalid = true;
+                // }
+
+                if (this.name != (null || "")) {
+
+                    this.$.registername.validate();
+
+                    if (this.mail != (null || "")) {
+
+                        this.$.registermail.validate();
+
+                        if (this.mobile.length == (10)) {
+
+                            this.$.registermobile.validate();
+
+                            this.createlead_postbody = {
+                                "name": this.name,
+                                "email": this.mail,
+                                "address": this.address,
+                                "mobileno": this.mobile
+                            }
+                            this.$.postlead_waitDialog.open();
+                            this.$.createlead_ironajax.generateRequest();
+
+                        }else{
+                            this.$.registermobile.invalid = true;
+                        }
+
+                    }else{
+                        console.log("The Mail is wrong");
+                        this.$.registermail.invalid = true;
+                    } 
+
+                }else{
+                    console.log("The name is invalid");
+                    this.$.registername.invalid = true;
                 }
-            },
-            _createLead: function() {
-                this.$.createtest_waitDialog.open();
-                this.setParams();
-                this.$.createlead_ironajax.generateRequest();
+
+
+
+
+                // if ((studentname == null || studentname == "") && (studentmail == null || studentmail == "")) {
+                //     document.getElementById('registername').validate();
+                //     document.getElementById('registermail').validate();
+                // } else if (studentname == null || studentname == "") {
+                //     document.getElementById('registername').validate();
+                // } else if (studentmail == null || studentmail == "") {
+                //     document.getElementById('registermail').validate();
+                // } else if ((studentmobile.length == 0)||(studentmobile.length > 0 && studentmobile.length != 10)) {
+                //     document.getElementById('registermobile').validate();
+                // } else {
+                //     this._createLead();
+                // }
 
             },
-            setParams: function() {
-                this.createlead_postbody = {
-                    "name": this.name,
-                    "email": this.mail,
-                    "address": this.address,
-                    "mobileno": this.mobile
-                };
-            },
+            // _createLead: function() {
+            //     this.$.createtest_waitDialog.open();
+            //     this.setParams();
+            //     this.$.createlead_ironajax.generateRequest();
+
+            // },
+            // setParams: function() {
+            //     this.createlead_postbody = {
+            //         "name": this.name,
+            //         "email": this.mail,
+            //         "address": this.address,
+            //         "mobileno": this.mobile
+            //     };
+            // },
             _createleadonResponse: function() {
-                this.$.createtest_waitDialog.close();
+
+                this.$.postlead_waitDialog.close();
                 var tempResponse = this.$.createlead_ironajax.lastResponse;
-                if (tempResponse != null && typeof tempResponse != undefined) {
-                    this.name="";
-                    this.mail="";
-                    this.address="";
-                    this.mobile="";
-                    var dialog = document.getElementById('registerdialog');
-                    if (dialog)
-                        dialog.open();
+                if (tempResponse != null && typeof(tempResponse) != undefined) {
+                    this.name = null;
+                    this.mail = null;
+                    this.address = null;
+                    this.mobile = null;
+                    this.$.leadsubmit_successful.open();
                 } else {
-                    alert("Something went wrong please retry");
+                    alert("Your information was not saved.Please try again.");
                 }
+
 
             },
             _createleadonError: function() {
-                this.$.createtest_waitDialog.close();
-                alert("Something went wrong please retry");
-
+                this.$.postlead_waitDialog.close();
+               // alert("Please fill all the details correctly.");
+               this.$.postlead_incorrecttoast.open();
             }
 
         });
     })();
-
-    //&& this.registermail !== null && this.registeraddress !== null
     </script>
 </dom-module>

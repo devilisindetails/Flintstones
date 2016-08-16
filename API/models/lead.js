@@ -3,39 +3,37 @@
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-    return leads = sequelize.define('leads', {
+    var lead = sequelize.define('lead', {
+        name: {
 
-        {
-            name: DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 len: [1, 250]
             }
         },
-
-        {
-            email: DataTypes.STRING,
+        email: {
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [1, 250]
+                isEmail: true
             }
         },
-
-        {
-            address: DataTypes.STRING,
+        address: {
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                len: [1, 250]
+                len: [0, 250]
             }
         },
-
-        {
-            mobileno: DataTypes.STRING,
+        mobileno: {
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [1, 250]
+                len: [10]
             }
         }
+
     }, {
         classMethods: {
             associate: function(models) {
@@ -43,4 +41,5 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     });
+    return lead;
 };
