@@ -1,10 +1,10 @@
 var Sequelize = require('sequelize');
-
 var env = process.env.NODE_ENV || 'development';
 var sequelize;
 
-if (env === 'production') {
 
+// setting up environment variable
+if (env === 'production') {
     sequelize = new Sequelize(process.env.DATABASE_URL,{
         dialect:'postgres'
     });
@@ -18,10 +18,11 @@ if (env === 'production') {
 
 
 
+//Instantiating database class and exporting the same
 var db = {};
 db.lead = sequelize.import(__dirname + '/API/models/lead.js');
+db.student = sequelize.import(__dirname + '/API/models/student.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 
 module.exports = db;
