@@ -4,9 +4,8 @@
     "description": "Online platform connecting students",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node server.js"
-
+        "start": "node server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "\"Ankit Kaushik\"",
     "license": "ISC",
