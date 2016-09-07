@@ -3,11 +3,11 @@
 window.addEventListener('WebComponentsReady', function() {
 
 
-    if (window.location.port === '') { // if production
-        page.base(app.baseUrl.replace(/\/$/, ''));
-    }
+    // if (window.location.port === '') { // if production
+    //     page.base(app.baseUrl.replace(/\/$/, ''));
+    // }
 
-    page.base('/app/dashboard/student/');
+    page.base('/student');
     // Middleware
     function scrollToTop(ctx, next) {
         app.scrollPageToTop();
@@ -20,79 +20,82 @@ window.addEventListener('WebComponentsReady', function() {
     }
 
     // Routes
-    page('*', scrollToTop, closeDrawer, function(ctx, next) {
-        next();
-    });
+    // page('*', scrollToTop, closeDrawer, function(ctx, next) {
+    //     next();
+    // });
 
     page('/', function() {
         app.route = 'upcomingtests';
-        var tempElement = document.getElementById("upcomingtests");
-        tempElement.autoReload();
+        //var tempElement = document.getElementById("upcomingtests");
+        //tempElement.autoReload();
     });
 
     page('/upcomingtests', function() {
         app.route = 'upcomingtests';
-        var tempElement = document.getElementById("upcomingtests");
-        tempElement.autoReload();
+        // var tempElement = document.getElementById("upcomingtests");
+        // tempElement.autoReload();
     });
     page('/pasttests', function() {
         app.route = 'pasttests';
-        var tempElement = document.getElementById("pasttests");
-        tempElement.autoReload();
-    });
-    page('/studenttaketest/:test_id/:test_title', function(data) {
-        app.route = 'studenttaketest';
-        app.params = data.params;
-        var tempElement = document.getElementById("studenttaketest");
-        tempElement.loadTest(data.params.test_id, data.params.test_title);
-    });
-    page('/studentviewtest/:test_id/:test_title', function(data) {
-        app.route = 'studentviewtest';
-        app.params = data.params;
-        var tempElement = document.getElementById("studentviewtest");
-        tempElement.loadTest(data.params.test_id, data.params.test_title);
+        // var tempElement = document.getElementById("pasttests");
+        // tempElement.autoReload();
     });
 
-    page('/settings', function() {
-        app.route = 'settings';
-    });
 
-    page('/studentscorecard/:test_id/:test_title/:total_marks/:end_time', function(data) {
-        app.route = 'student-scorecard';
-        app.params = data.params;
-        var tempElement = document.getElementById("student-scorecard");
-        tempElement.loadScore(data.params.test_id, data.params.test_title, data.params.total_marks, data.params.end_time);
-    });
 
-    page('/contactus', function() {
-        app.route = 'contactus';
-        var tempElement = document.getElementById("contactus");
-        tempElement.loadDetails(localStorage.coachingaddress,localStorage.coachingcontactno,localStorage.coachingemail);
-    });
-    page('/viewprofile', function() {
-        app.route = 'viewprofile';
-        var tempElement = document.getElementById("viewprofile");
-        tempElement.check = true;
-        tempElement.onLoad();
-    });
-    page('/editprofile', function() {
-        app.route = 'editprofile';
-        var tempElement = document.getElementById("editprofile");
-        tempElement.check = true;
-        tempElement.onLoad();
-    });
-    page('/submittedtests', function() {
-        app.route = 'submittedtests';
-    });
-    page('/notification', function() {
-        app.route = 'notification';
-    });
-    page('/studentviewrank/:test_id/:test_title', function(data) {
-        app.route = 'studentviewrank';
-        app.params = data.params;
-        var tempElement = document.getElementById("studentviewrank");
-        tempElement.loadResult(data.params.test_id,data.params.test_title);
-    });
+    // page('/studenttaketest/:test_id/:test_title', function(data) {
+    //     app.route = 'studenttaketest';
+    //     app.params = data.params;
+    //     var tempElement = document.getElementById("studenttaketest");
+    //     tempElement.loadTest(data.params.test_id, data.params.test_title);
+    // });
+    // page('/studentviewtest/:test_id/:test_title', function(data) {
+    //     app.route = 'studentviewtest';
+    //     app.params = data.params;
+    //     var tempElement = document.getElementById("studentviewtest");
+    //     tempElement.loadTest(data.params.test_id, data.params.test_title);
+    // });
+
+    // page('/settings', function() {
+    //     app.route = 'settings';
+    // });
+
+    // page('/studentscorecard/:test_id/:test_title/:total_marks/:end_time', function(data) {
+    //     app.route = 'student-scorecard';
+    //     app.params = data.params;
+    //     var tempElement = document.getElementById("student-scorecard");
+    //     tempElement.loadScore(data.params.test_id, data.params.test_title, data.params.total_marks, data.params.end_time);
+    // });
+
+    // page('/contactus', function() {
+    //     app.route = 'contactus';
+    //     var tempElement = document.getElementById("contactus");
+    //     tempElement.loadDetails(localStorage.coachingaddress,localStorage.coachingcontactno,localStorage.coachingemail);
+    // });
+    // page('/viewprofile', function() {
+    //     app.route = 'viewprofile';
+    //     var tempElement = document.getElementById("viewprofile");
+    //     tempElement.check = true;
+    //     tempElement.onLoad();
+    // });
+    // page('/editprofile', function() {
+    //     app.route = 'editprofile';
+    //     var tempElement = document.getElementById("editprofile");
+    //     tempElement.check = true;
+    //     tempElement.onLoad();
+    // });
+    // page('/submittedtests', function() {
+    //     app.route = 'submittedtests';
+    // });
+    // page('/notification', function() {
+    //     app.route = 'notification';
+    // });
+    // page('/studentviewrank/:test_id/:test_title', function(data) {
+    //     app.route = 'studentviewrank';
+    //     app.params = data.params;
+    //     var tempElement = document.getElementById("studentviewrank");
+    //     tempElement.loadResult(data.params.test_id,data.params.test_title);
+    // });
     // 404
     page('*', function() {
         app.$.toast.text = 'Can\'t find: ' + window.location.href + '. Redirected you to upcoming tests page';
@@ -102,7 +105,7 @@ window.addEventListener('WebComponentsReady', function() {
 
     // add #! before urls
     page({
-        hashbang: true
+        hashbang: false
     });
 
 });

@@ -71,6 +71,14 @@
                 <paper-button class="errorbutton" dialog-dismiss>OK</paper-button>
             </div>
         </paper-dialog>
+        <paper-dialog id="student_incorrectlogin" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+            <div class="centerfield">
+                Your loginID/Password is incorrect.Please try again.
+            </div>
+            <div class="centercontainer">
+                <paper-button class="errorbutton" dialog-dismiss>OK</paper-button>
+            </div>
+        </paper-dialog>
         <!-- Paper Dialogs ends here -->
         <!-- ajax call to check login starts here-->
         <iron-ajax id="studentsignin_ajaxCall" method="POST" url="/signin" handle-as="json" content-type='application/json' body="{{credentials}}" on-response="postloginonResponse" on-error="postloginonError"></iron-ajax>
@@ -132,12 +140,12 @@
                 },
                 postloginonResponse: function() {
 
-                    console.log("You are in student home page");
-
+                   
+                    window.location.href = "/student";
                 },
                 postloginonError: function() {
                 //     //this.closewaitDialog();
-                     alert("Something went wrong please try again.");
+                     this.$.student_incorrectlogin.open();
                  }
 
 

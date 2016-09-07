@@ -22,7 +22,14 @@ if (env === 'production') {
 var db = {};
 db.lead = sequelize.import(__dirname + '/API/models/lead.js');
 db.student = sequelize.import(__dirname + '/API/models/student.js');
+db.teacher = sequelize.import(__dirname + '/API/models/teacher.js');
+db.batch = sequelize.import(__dirname + '/API/models/batch.js');
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.student.belongsTo(db.batch);
+db.batch.hasMany(db.student);
+db.teacher.hasMany(db.batch);
+db.batch.belongsTo(db.teacher);
 module.exports = db;

@@ -45,38 +45,25 @@
             <paper-header-panel drawer fixed id="drawerlist" mode="waterfall">
                 <!-- Drawer Toolbar -->
                 <paper-toolbar id="drawerToolbar" style="color:black;background-color:#ffffff;">
-                    <iron-image style="width:40px; height:40px;" sizing="cover" src="/app/images/touch/studysolo_icon_128.png"></iron-image>
+                    <iron-image style="width:40px; height:40px;" sizing="cover" src="../../app/images/touch/studysolo_icon_128.png"></iron-image>
                     <span class="heading" style="font-size:125%; text-transform: initial; font-style: italic;">StudySolo</span>
                 </paper-toolbar>
                 <!-- Drawer Content -->
                 <div class="horizontal-section">
                     <paper-menu id="drawerlist" class="app-menu" attr-for-selected="data-route" selected="[[route]]" label="menu">
-                        <a class="menuList" data-route="upcomingtests" href="#!/upcomingtests" style="text-decoration: none;">
+                        <a class="menuList" data-route="upcomingtests" href="student/upcomingtests" style="text-decoration: none;">
                             <paper-item class="hoveronmenu">
                                 <iron-icon icon="maps:local-library"></iron-icon>
                                 <span class="heading">Upcoming Tests</span>
                             </paper-item>
                         </a>
-                        <a class="menuList" data-route="pasttests" href="#!/pasttests" style="text-decoration: none;">
+                        <a class="menuList" data-route="pasttests" href="student/pasttests" style="text-decoration: none;">
                             <paper-item class="hoveronmenu">
                                 <iron-icon icon="icons:update"></iron-icon>
                                 <span class="heading">Past Tests</span>
                             </paper-item>
                         </a>
-                        <!-- <paper-item>
-                            <a data-route="notification" href="#!/notification">
-                                <iron-icon icon="notification:sms">
-                                </iron-icon>
-                                <span>Send Notification</span>
-                            </a>
-                        </paper-item> -->
-                        <!--  <a class="menuList" data-route="profile" href="#!/profile" style="text-decoration: none;">
-                            <paper-item>
-                                <iron-icon icon="icons:account-circle"></iron-icon>
-                                <span class="heading">Profile</span>
-                            </paper-item>
-                        </a> -->
-                        <a class="menuList" data-route="contactus" href="#!/contactus" style="text-decoration: none;">
+                        <a class="menuList" data-route="contactus" href="/contactus" style="text-decoration: none;">
                             <paper-item class="hoveronmenu">
                                 <iron-icon icon="mail"></iron-icon>
                                 <span class="heading">Contact Us</span>
@@ -115,12 +102,14 @@
                 <div class="maincontent" id="mainCo">
                     <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;background-color:#f2f2f2;">
                         <section data-route="upcomingtests">
-                            <student-upcomingtests id="upcomingtests"></student-upcomingtests>
+                            <p>Upcoming Tests</p>
+                            <!-- <student-upcomingtests id="upcomingtests"></student-upcomingtests> -->
                         </section>
                         <section data-route="pasttests">
-                            <student-pasttests id="pasttests"></student-pasttests>
+                            <p>Past Tests</p>
+                            <!-- <student-pasttests id="pasttests"></student-pasttests> -->
                         </section>
-                        <section data-route="studenttaketest">
+                        <!-- <section data-route="studenttaketest">
                             <student-taketest id="studenttaketest"></student-taketest>
                         </section>
                         <section data-route="studentviewtest">
@@ -140,7 +129,7 @@
                         </section>
                         <section data-route="studentviewrank">
                             <student-viewrank id="studentviewrank"></student-viewrank>
-                        </section>
+                        </section> -->
                     </iron-pages>
                 </div>
             </paper-header-panel>
@@ -183,7 +172,7 @@
                 <a class="menuList" data-route="viewprofile" href="#!/viewprofile" onclick="app.dialogClosed()" style="text-decoration: none;">
                     <paper-item class="hoveronmenu">
                         <iron-icon icon="icons:account-circle"></iron-icon>
-                        <span class="heading"> View Profile</span>
+                        <span class="heading">View Profile</span>
                     </paper-item>
                 </a>
                 <a class="menuList" data-route="editprofile" href="#!/editprofile" onclick="app.dialogClosed()" style="text-decoration: none;">
@@ -202,8 +191,8 @@
         </paper-dialog>
     </template>
     <!-- build:js scripts/app.js -->
-    <script src="/app/scripts/app.js"></script>
-    <!-- endbuild-->
+     <!-- <script src="/app/scripts/app.js"></script> -->
+     --><!-- endbuild
 </body>
 
 </html>

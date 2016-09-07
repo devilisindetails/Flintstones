@@ -1,5 +1,3 @@
-//var db = require(‘.. / .. / config / database’).database;
-
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
