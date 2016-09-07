@@ -89,7 +89,7 @@ app.post('/rootuser', function(req, res) {
 
 // display sign in for teachers 
 app.get('/teachersignin', function(req, res) {
-    res.send("This is where teachers will sign in");
+    res.send("This is where teachers will sign in after authenticate");
 });
 
 
