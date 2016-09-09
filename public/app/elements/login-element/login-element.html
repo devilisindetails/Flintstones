@@ -80,7 +80,7 @@
             </div>
         </paper-dialog>
         <!-- Paper Dialogs ends here -->
-        <!-- ajax call to check login starts here-->
+        <!-- ajax call while login starts here-->
         <iron-ajax id="studentsignin_ajaxCall" method="POST" url="/signin" handle-as="json" content-type='application/json' body="{{credentials}}" on-response="postloginonResponse" on-error="postloginonError"></iron-ajax>
 
        
@@ -117,7 +117,8 @@
                         type: Object,
                         notify: true,
                         computed: '_computeCredentials(username, password)'
-                    }},
+                    }
+                },
                
                 _computeCredentials: function(username, password) {
                     return JSON.stringify({
@@ -138,9 +139,21 @@
                   
                     this.$.studentsignin_ajaxCall.generateRequest();
                 },
-                postloginonResponse: function() {
+                postloginonResponse: function(callresponse) {
 
+                    var student_data = JSON.stringify(callresponse.detail.response);
                    
+
+                    if (typeof(Storage) !== "undefined"){
+
+                        localStorage.setItem('student_data',student_data);
+
+                    }
+                    else {
+                        // whenever get the time , make user upgrade browser if it does not exist
+                        console.log("One need to update browser storage capacity");
+                    }
+                    
                     window.location.href = "/student";
                 },
                 postloginonError: function() {

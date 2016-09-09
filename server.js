@@ -47,20 +47,50 @@ app.get('/signin', function(req, res) {
 //signing in by student
 app.post('/signin', function(req, res) {
     var body = _.pick(req.body, 'loginID', 'password');
+    var token;
+    var callresponse = {};
+
+    // To find the student instance
     db.student.authenticate(body).then(function(student) {
 
-
         //generating token for a student to be wrapped in cookie
-        var token = student.generateToken('authentication');
-        res.header('Auth', token);
-        res.cookie('token', token, {
-            expires: new Date(Date.now() + 9999999),
-            httpOnly: false
-        }).status(200).send();
+        token = student.generateToken('authentication');
+
+
+        callresponse.student = _.pick(student, 'id', 'student_loginID', 'student_email','student_school', 'batchId');
+
+        // To find the batch instance
+        db.batch.findById(student.batchId).then(function(batch) {
+
+
+            callresponse.batch = _.pick(batch, 'id', 'batchname', 'teacherId');
+            //To find teacher instance
+            db.teacher.findById(batch.teacherId).then(function(teacher) {
+
+                callresponse.teacher = _.pick(teacher, 'id', 'teacher_email', 'teacher_name', 'teacher_mobile', 'teacher_address');
+
+                res.cookie('token', token, {
+                    expires: new Date(Date.now() + 9999999),
+                    httpOnly: false
+                }).json(callresponse);
+
+
+            }, function(e) {
+                console.error(e);
+                return res.status(401).send();
+            })
+
+        }, function(e) {
+            console.error(e);
+            return res.status(401).send();
+        })
+
     }, function(e) {
         console.error(e);
         return res.status(401).send();
     });
+
+
 
 });
 

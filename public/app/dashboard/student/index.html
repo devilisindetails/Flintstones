@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#2E3AA1">
     <!-- Web Application Manifest -->
     <link rel="app/manifest" href="manifest.json">
-    <!-- Tile color for Win8 --> 
+    <!-- Tile color for Win8 -->
     <meta name="msapplication-TileColor" content="#3372DF">
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -69,8 +69,8 @@
                                 <span class="heading">Contact Us</span>
                             </paper-item>
                         </a>
-                        <a href= "javascript:void(0)" class="menuList" on-click="openFeedback" style="text-decoration: none;pointer-events:auto;">
-                            <paper-item class="hoveronmenu"> 
+                        <a href="javascript:void(0)" class="menuList" on-click="openFeedback" style="text-decoration: none;pointer-events:auto;">
+                            <paper-item class="hoveronmenu">
                                 <iron-icon icon="icons:feedback"></iron-icon>
                                 <span class="heading">Give Feedback</span>
                             </paper-item>
@@ -101,6 +101,10 @@
                 <!-- Main Content -->
                 <div class="maincontent" id="mainCo">
                     <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;background-color:#f2f2f2;">
+                        <section data-route="contactus">
+                            <p>Let's meet up buddy</p>
+                           <!--  <student-contactus id="contactus"></student-contactus> -->
+                        </section>
                         <section data-route="upcomingtests">
                             <p>Upcoming Tests</p>
                             <!-- <student-upcomingtests id="upcomingtests"></student-upcomingtests> -->
@@ -120,9 +124,6 @@
                         </section>
                         <section data-route="editprofile">
                             <student-editprofile id="editprofile"></student-editprofile>
-                        </section>
-                        <section data-route="contactus">
-                            <student-contactus id="contactus"></student-contactus>
                         </section>
                         <section data-route="student-scorecard">
                             <student-scorecard id="student-scorecard"></student-scorecard>
@@ -191,8 +192,8 @@
         </paper-dialog>
     </template>
     <!-- build:js scripts/app.js -->
-     <!-- <script src="/app/scripts/app.js"></script> -->
-     --><!-- endbuild
+ <script src="/app/scripts/app.js"></script> 
+    <!-- endbuild
 </body>
 
 </html>
