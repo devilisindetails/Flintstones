@@ -49,58 +49,59 @@ app.post('/signin', function(req, res) {
     var body = _.pick(req.body, 'loginID', 'password');
     var token;
     var callresponse = {};
-
     // To find the student instance
     db.student.authenticate(body).then(function(student) {
-
         //generating token for a student to be wrapped in cookie
         token = student.generateToken('authentication');
-
-
-        callresponse.student = _.pick(student, 'id', 'student_loginID', 'student_email','student_school', 'batchId');
-
+        callresponse.student = _.pick(student, 'id', 'student_loginID', 'student_email', 'student_school', 'batchId');
         // To find the batch instance
         db.batch.findById(student.batchId).then(function(batch) {
-
-
             callresponse.batch = _.pick(batch, 'id', 'batchname', 'teacherId');
             //To find teacher instance
             db.teacher.findById(batch.teacherId).then(function(teacher) {
-
                 callresponse.teacher = _.pick(teacher, 'id', 'teacher_email', 'teacher_name', 'teacher_mobile', 'teacher_address');
-
                 res.cookie('token', token, {
                     expires: new Date(Date.now() + 9999999),
                     httpOnly: false
                 }).json(callresponse);
-
-
             }, function(e) {
                 console.error(e);
                 return res.status(401).send();
             })
-
         }, function(e) {
             console.error(e);
             return res.status(401).send();
         })
-
     }, function(e) {
         console.error(e);
         return res.status(401).send();
     });
-
-
-
 });
 
 
 //Requesting Home Page by student
 app.get('/student', middleware.requireStudentAuthentication, function(req, res) {
-
     res.sendFile(path.join(__dirname + '/public/app/dashboard/student/index.html'));
+});
 
 
+
+// Posting student feedback
+app.post('/studentfeedback/submit', middleware.requireStudentAuthentication, function(req, res) {
+    var body = _.pick(req.body, 'student_loginID', 'student_feedback_subject', 'student_feedback_message');
+    // Adding feedback created by student
+    db.studentfeedback.create(body).then(function(studentfeedback) {
+        req.student.addStudentfeedback(studentfeedback).then(function() {
+            return studentfeedback.reload();
+        }).then(function() {
+            // The successful response call. 
+            //Add here any JSON object if you want to send to client-side.            
+            res.status(200).send();
+        });
+    }, function(e) {
+        console.error(e);
+        return res.status(401).send();
+    });
 });
 
 
@@ -135,7 +136,12 @@ app.post('/teachersignin', function(req, res) {
     });
 });
 
+
 //GET Homepage for Teacher
+
+
+
+
 
 
 
@@ -167,28 +173,21 @@ app.get('/teacher/Mybatches/:batchname', middleware.requireTeacherAuthentication
 
 //Adding a student in a batch
 app.post('/teacher/Mybatches/:batchname', middleware.requireTeacherAuthentication, function(req, res) {
-
-
     var batchname = req.params.batchname;
     var body = _.pick(req.body, 'student_loginID', 'student_password', 'student_email', 'student_school');
-
-
     //assigning the batch to the request
     db.batch.findOne({
         where: {
             batchname: batchname
         }
     }).then(function(batch) {
-
         //checking the authenticity of the teacher editing the batches
         if (batch.teacherId != req.teacher.id) {
             console.log("You are not allowed to change details of this section");
             return;
         }
-
         // Adding the found batch to the request object
         req.batch = batch;
-
         //creating the student in a batch
         db.student.create(body).then(function(student) {
             req.batch.addStudent(student).then(function() {
@@ -211,11 +210,9 @@ app.post('/teacher/Mybatches/:batchname', middleware.requireTeacherAuthenticatio
 
 //initializing database models and starting server
 db.sequelize.sync().then(function() {
-
     app.listen(PORT, function() {
         console.log('Express server started on ' + PORT);
     });
-
 });
 
 
@@ -228,5 +225,7 @@ db.sequelize.sync().then(function() {
 
 
 //wire the API routes so that student can see his batch and teacher information
+
+// Let student see his profile and can logout
 
 // Add models for tests & questions

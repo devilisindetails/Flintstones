@@ -59,17 +59,17 @@
         
         .okButton:hover {
             background-color: var(--button-hover);
-            }
+        }
         </style>
         <paper-card class="layout horizontal" style="height: 89vh;width: 99%;margin:5px; margin-bottom:-10px;">
-            <paper-card image="/app/images/contactus10.gif" style="height: 58%;width: 30%;margin-top: 3%;margin-left: 2%;" class="card" preloadImage="true" elevation="0" class="layout horizontal"></paper-card>
+            <paper-card image="../../../app/images/GIF_contactus.gif" style="height: 58%;width: 30%;margin-top: 3%;margin-left: 2%;" class="card" preloadImage="true" elevation="0" class="layout horizontal"></paper-card>
             <div class="container" style="margin-left: 25%;">
                 <paper-card style="margin-bottom: 4%;" elevation="4">
                     <div class="heading"><b style="font-family: 'Bodoni MT';color: #3F51B5;">StudySolo</b></div>
                     <div class="card-content">
                         <div>
                             <paper-icon-button icon="communication:contacts" style="color: grey;"></paper-icon-button>
-                            <span>IIA-23, Nehru Nagar, Ghaziabad, UP(India)</span>
+                            <span>II A-23, Nehru Nagar, Ghaziabad, UP(India)</span>
                         </div>
                         <div>
                             <paper-icon-button icon="communication:email" style="color: grey;"></paper-icon-button>
@@ -83,7 +83,7 @@
                 <!-- ********************************************************************************************************************** -->
                 <!-- ********************************************************************************************************************** -->
                 <paper-card style="margin-bottom: 5%;" elevation="4">
-                    <div class="heading"><b style="font-family: 'Bodoni MT';color: #3F51B5;">My Teacher</b></div>
+                    <div class="heading"><b style="font-family: 'Bodoni MT';color: #3F51B5;">{{teacher_name}}</b></div>
                     <div class="card-content">
                         <div>
                             <paper-icon-button icon="communication:contacts" style="color: grey;"></paper-icon-button>
@@ -97,7 +97,7 @@
                             <paper-icon-button icon="communication:call" style="color: grey;"></paper-icon-button>
                             <span>{{contactno}}</span></div>
                         <div>
-                            <div class="layout horizontal-reverse" style="margin-top: 2%; display:none";>
+                            <div class="layout horizontal-reverse" style="margin-top: 2%; display:none" ;>
                                 <paper-button class="okButton" style="height: 20%;text-transform: initial;" raised onclick="app.$.emailtutor.open()">Ask my Teacher</paper-button>
                             </div>
                         </div>
@@ -145,24 +145,29 @@
         Polymer({
             is: 'student-contactus',
             properties: {
-                address:{
-                    type:String,
-                    notify:true
+                address: {
+                    type: String,
+                    notify: true
                 },
-                contactno:{
-                    type:String,
-                    notify:true
+                contactno: {
+                    type: String,
+                    notify: true
                 },
-                email:{
-                    type:String,
-                    notify:true
+                email: {
+                    type: String,
+                    notify: true
+                },
+                teacher_name: {
+                    type: String,
+                    notify: true
                 }
 
             },
-            loadDetails:function(address,contactno,email){
-                this.address=address;
-                this.contactno=contactno;
-                this.email=email;
+            load_teacher_contactDetails: function(student_ofteacher) {
+                this.address = student_ofteacher.teacher_address;
+                this.contactno = student_ofteacher.teacher_mobile;
+                this.email = student_ofteacher.teacher_email;
+                this.teacher_name = student_ofteacher.teacher_name;
             }
 
         });

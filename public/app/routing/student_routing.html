@@ -3,9 +3,9 @@
 window.addEventListener('WebComponentsReady', function() {
 
 
-    // if (window.location.port === '') { // if production
-    //     page.base(app.baseUrl.replace(/\/$/, ''));
-    // }
+    if (window.location.port === '') { // if production
+        page.base(app.baseUrl.replace(/\/$/, ''));
+    }
 
     page.base('/student');
     // Middleware
@@ -35,10 +35,23 @@ window.addEventListener('WebComponentsReady', function() {
         // var tempElement = document.getElementById("upcomingtests");
         // tempElement.autoReload();
     });
+    
     page('/pasttests', function() {
         app.route = 'pasttests';
         // var tempElement = document.getElementById("pasttests");
         // tempElement.autoReload();
+    });
+
+
+    page('/contactus', function() {
+        app.route = 'contactus';
+        var student_data = JSON.parse(localStorage.getItem('student_data'));
+        app.$.contactus.load_teacher_contactDetails(student_data.teacher);
+
+    });
+
+    page('/feedback', function() {
+        app.route = 'student_feedback';
     });
 
 
@@ -67,11 +80,7 @@ window.addEventListener('WebComponentsReady', function() {
     //     tempElement.loadScore(data.params.test_id, data.params.test_title, data.params.total_marks, data.params.end_time);
     // });
 
-    // page('/contactus', function() {
-    //     app.route = 'contactus';
-    //     var tempElement = document.getElementById("contactus");
-    //     tempElement.loadDetails(localStorage.coachingaddress,localStorage.coachingcontactno,localStorage.coachingemail);
-    // });
+
     // page('/viewprofile', function() {
     //     app.route = 'viewprofile';
     //     var tempElement = document.getElementById("viewprofile");
@@ -97,11 +106,11 @@ window.addEventListener('WebComponentsReady', function() {
     //     tempElement.loadResult(data.params.test_id,data.params.test_title);
     // });
     // 404
-    page('*', function() {
-        app.$.toast.text = 'Can\'t find: ' + window.location.href + '. Redirected you to upcoming tests page';
-        app.$.toast.show();
-        page.redirect('/upcomingtests');
-    });
+    // page('*', function() {
+    //     app.$.toast.text = 'Can\'t find: ' + window.location.href + '. Redirected you to upcoming tests page';
+    //     app.$.toast.show();
+    //     page.redirect('/upcomingtests');
+    // });
 
     // add #! before urls
     page({

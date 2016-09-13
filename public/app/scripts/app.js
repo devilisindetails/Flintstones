@@ -3,52 +3,73 @@
 
     var app = document.querySelector('#app');
 
-    if (typeof(Storage) !== "undefined")
-
-
-    {
-          // Code for localStorage/sessionStorage.
-
-        var student_data = JSON.parse(localStorage.getItem('student_data')); // gives back string object
-
-        console.log(student_data);
-
-        app.username = student_data.student.student_email;
-
-
-    } else {
-        // Sorry! No Web Storage support..
+    app.baseUrl = '/';
+    if (window.location.port === '') { // if production
+        // Uncomment app.baseURL below and
+        // set app.baseURL to '/your-pathname/' if running from folder in production
+        app.baseUrl = '/home/ankit/J.A.R.V.I.S/version3/app/';
     }
 
 
+    // Checking if local storage is available on browser
+    if (typeof(Storage) !== "undefined") {
+        // Code for localStorage/sessionStorage.
+        var student_data = JSON.parse(localStorage.getItem('student_data')); // gives back string object
+
+        //checking if the token has login credentials or not
+        if (student_data.student.student_loginID === "" || null) {
+
+            return (window.location.assign("/app/index.html"));
+        }
+
+        app.username = student_data.student.student_email;
+
+        app.expandFunction = function() {
+
+            if (!app.showProfileMenu) {
+                app.$.profileMenu.open();
+                app.showProfileMenu = true;
+                app.$.openBox.style.display = "none";
+                app.$.closeBox.style.display = "block";
+            } else {
+                app.$.profileMenu.close();
+                app.showProfileMenu = false;
+                app.$.closeBox.style.display = "none";
+                app.$.openBox.style.display = "block";
+            }
+
+        };
+        app.dialogClosed = function() {
+            app.$.profileMenu.close();
+            app.showProfileMenu = false;
+            app.$.closeBox.style.display = "none";
+            app.$.openBox.style.display = "block";
+        };
+
+        app.logoutFunction = function() {
+            localStorage.student_data = "";
+            //window.location.assign("index.html");
+        };
+
+
+        // See https://github.com/Polymer/polymer/issues/1381
+        window.addEventListener('WebComponentsReady', function() {
+            // imports are loaded and elements have been registered
+            app.listen(app.$.profileMenu, 'iron-overlay-closed', 'dialogClosed');
+        });
 
 
 
 
+    } else {
 
 
-
+        // Sorry! No Web Storage support..
+        window.location.assign("/app/index.html");
+    }
 
 
 })(document);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // if loginid is not valid go to login page
 // if (typeof localStorage.loginid == undefined && localStorage.loginid == null && localStorage.loginid == "") {
@@ -59,12 +80,7 @@
 //     app.showProfileMenu = false;
 // }
 
-// app.baseUrl = '/';
-// if (window.location.port === '') { // if production
-//     // Uncomment app.baseURL below and
-//     // set app.baseURL to '/your-pathname/' if running from folder in production
-//     // app.baseUrl = '/polymer-starter-kit/';
-// }
+
 
 // app.displayInstalledToast = function() {
 //     // Check to make sure caching is actually enabled—it won't be in the dev environment.
@@ -80,24 +96,9 @@
 //     // loadingScreen.style.display='none';
 // });
 
-// // See https://github.com/Polymer/polymer/issues/1381
-// window.addEventListener('WebComponentsReady', function() {
-//     // imports are loaded and elements have been registered
-//     app.listen(app.$.profileMenu, 'iron-overlay-closed', 'dialogClosed');
-// });
 
-// app.logoutFunction = function() {
-//     localStorage.loginid = "";
-//     localStorage.password = "";
-//     localStorage.coachingid = "";
-//     localStorage.type = "";
-//     localStorage.username = "";
-//     localStorage.coachingname = "";
-//     localStorage.coachingaddress = "";
-//     localStorage.coachingcontactno = "";
-//     localStorage.coachingemail = "";
-//     window.location.assign("index.html");
-// };
+
+
 
 // // Scroll page to top and expand header
 // app.scrollPageToTop = function() {
@@ -112,26 +113,7 @@
 //     location.reload();
 // };
 
-// app.expandFunction = function() {
-//     if (!app.showProfileMenu) {
-//         app.$.profileMenu.open();
-//         app.showProfileMenu = true;
-//         app.$.openBox.style.display = "none";
-//         app.$.closeBox.style.display = "block";
-//     } else {
-//         app.$.profileMenu.close();
-//         app.showProfileMenu = false;
-//         app.$.closeBox.style.display = "none";
-//         app.$.openBox.style.display = "block";
-//     }
-// };
 
-// app.dialogClosed = function() {
-//     app.$.profileMenu.close();
-//     app.showProfileMenu = false;
-//     app.$.closeBox.style.display = "none";
-//     app.$.openBox.style.display = "block";
-// };
 
 // app.openFeedback = function() {
 //     app.$.feedbackForm.setUsername();

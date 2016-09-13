@@ -63,16 +63,16 @@
                                 <span class="heading">Past Tests</span>
                             </paper-item>
                         </a>
-                        <a class="menuList" data-route="contactus" href="/contactus" style="text-decoration: none;">
+                        <a class="menuList" data-route="contactus" href="student/contactus" style="text-decoration: none;">
                             <paper-item class="hoveronmenu">
                                 <iron-icon icon="mail"></iron-icon>
                                 <span class="heading">Contact Us</span>
                             </paper-item>
                         </a>
-                        <a href="javascript:void(0)" class="menuList" on-click="openFeedback" style="text-decoration: none;pointer-events:auto;">
+                        <a class="menuList" data-route="student_feedback" href="student/feedback" style="text-decoration: none;pointer-events:auto;">
                             <paper-item class="hoveronmenu">
                                 <iron-icon icon="icons:feedback"></iron-icon>
-                                <span class="heading">Give Feedback</span>
+                                <span class="heading">Write a Review</span>
                             </paper-item>
                         </a>
                     </paper-menu>
@@ -102,16 +102,17 @@
                 <div class="maincontent" id="mainCo">
                     <iron-pages attr-for-selected="data-route" selected="{{route}}" style="height:100%;background-color:#f2f2f2;">
                         <section data-route="contactus">
-                            <p>Let's meet up buddy</p>
-                           <!--  <student-contactus id="contactus"></student-contactus> -->
+                            <student-contactus id="contactus"></student-contactus>
                         </section>
                         <section data-route="upcomingtests">
-                            <p>Upcoming Tests</p>
-                            <!-- <student-upcomingtests id="upcomingtests"></student-upcomingtests> -->
+                            <student-upcomingtests id="upcomingtests"></student-upcomingtests>
                         </section>
                         <section data-route="pasttests">
                             <p>Past Tests</p>
                             <!-- <student-pasttests id="pasttests"></student-pasttests> -->
+                        </section>
+                        <section data-route="student_feedback">
+                            <student-feedback id="studentFeedback"></student-feedback>
                         </section>
                         <!-- <section data-route="studenttaketest">
                             <student-taketest id="studenttaketest"></student-taketest>
@@ -157,9 +158,6 @@
                 <span style="margin-left:10px;">{{waitDialogMessage}}</span>
             </div>
         </paper-dialog>
-        <paper-dialog id="emailstudysolo" with-backdrop style="background-color: white; border: 2px solid #3F51B5; border-radius:1%; width:80%; height:65%;">
-            <feedback-element id="feedbackForm"></feedback-element>
-        </paper-dialog>
         <paper-dialog style="border: 3px solid #3F51B5;" id="instructions" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
             <paper-dialog-scrollable style="margin-top: 0;">
                 <student-instructions></student-instructions>
@@ -182,7 +180,7 @@
                         <span class="heading">Edit Profile</span>
                     </paper-item>
                 </a>
-                <a class="menuList" href="/app" onclick="app.logoutFunction()" style="text-decoration: none;">
+                <a class="menuList" href="/signin" onclick="app.logoutFunction()" style="text-decoration: none;">
                     <paper-item class="hoveronmenu">
                         <iron-icon icon="icons:exit-to-app"></iron-icon>
                         <span class="heading">Logout</span>
@@ -192,7 +190,7 @@
         </paper-dialog>
     </template>
     <!-- build:js scripts/app.js -->
- <script src="/app/scripts/app.js"></script> 
+    <script src="/app/scripts/app.js"></script>
     <!-- endbuild
 </body>
 
