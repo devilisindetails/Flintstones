@@ -2,7 +2,8 @@ module.exports = function(db) {
     return {
         requireStudentAuthentication: function(req, res, next) {
 
-              var token = req.cookies.token;
+            var token = req.cookies.token;
+            //var token = req.get('StudentAuth');
             db.student.findByToken(token).then(function(student) {
                 req.student = student;
                 next();

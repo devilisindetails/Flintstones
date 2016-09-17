@@ -81,9 +81,7 @@
         </paper-dialog>
         <!-- Paper Dialogs ends here -->
         <!-- ajax call while login starts here-->
-        <iron-ajax id="studentsignin_ajaxCall" method="POST" url="/signin" handle-as="json" content-type='application/json' body="{{credentials}}" on-response="postloginonResponse" on-error="postloginonError"></iron-ajax>
-
-       
+        <iron-ajax id="ajax_call_student_signin" method="POST" url="/signin" handle-as="json" content-type='application/json' body="{{credentials}}" on-response="ajax_response_student_signin" on-error="ajax_error_student_signin"></iron-ajax>
     </template>
     <script>
     (function() {
@@ -119,7 +117,7 @@
                         computed: '_computeCredentials(username, password)'
                     }
                 },
-               
+
                 _computeCredentials: function(username, password) {
                     return JSON.stringify({
                         'loginID': username,
@@ -134,44 +132,41 @@
                         this.openDialog();
                         return false;
                     }
-                }, 
-                postlogin: function() {
-                  
-                    this.$.studentsignin_ajaxCall.generateRequest();
                 },
-                postloginonResponse: function(callresponse) {
+                postlogin: function() {
+
+                    this.$.ajax_call_student_signin.generateRequest();
+                },
+                ajax_response_student_signin: function(callresponse) {
 
                     var student_data = JSON.stringify(callresponse.detail.response);
-                   
 
-                    if (typeof(Storage) !== "undefined"){
 
-                        localStorage.setItem('student_data',student_data);
+                    if (typeof(Storage) !== "undefined") {
 
-                    }
-                    else {
+                        localStorage.setItem('student_data', student_data);
+
+                    } else {
                         // whenever get the time , make user upgrade browser if it does not exists
                         console.log("One need to update browser storage capacity");
                     }
-                    
+
                     window.location.href = "/student";
                 },
-                postloginonError: function() {
-                //     //this.closewaitDialog();
-                     this.$.student_incorrectlogin.open();
-                 }
+                ajax_error_student_signin: function() {
+                    //     //this.closewaitDialog();
+                    this.$.student_incorrectlogin.open();
+                }
 
 
 
-                 });
+            });
     })();
-        
     </script>
 </dom-module>
 
 
-
-                    // this.closewaitDialog();
+// this.closewaitDialog();
                     // if (this.$.checklogin_ajaxCall.lastResponse != null && this.$.checklogin_ajaxCall.lastResponse != "") {
                     //     if (this.$.checklogin_ajaxCall.lastResponse.response.loginid != null && this.$.checklogin_ajaxCall.lastResponse.response.loginid != "") {
                     //         var userdata = this.$.checklogin_ajaxCall.lastResponse.response;

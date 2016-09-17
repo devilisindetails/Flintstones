@@ -60,7 +60,7 @@ app.post('/signin', function(req, res) {
             //To find teacher instance
             db.teacher.findById(batch.teacherId).then(function(teacher) {
                 callresponse.teacher = _.pick(teacher, 'id', 'teacher_email', 'teacher_name', 'teacher_mobile', 'teacher_address');
-                res.cookie('token', token, {
+                res.header('StudentAuth', token).cookie('token', token, {
                     expires: new Date(Date.now() + 9999999),
                     httpOnly: false
                 }).json(callresponse);
@@ -81,8 +81,30 @@ app.post('/signin', function(req, res) {
 
 //Requesting Home Page by student
 app.get('/student', middleware.requireStudentAuthentication, function(req, res) {
+
     res.sendFile(path.join(__dirname + '/public/app/dashboard/student/index.html'));
 });
+
+
+//Requesting List of upcoming tests by student
+app.get('/studentget/upcomingtests', middleware.requireStudentAuthentication, function(req, res) {
+
+    db.testdetail.findAll({
+        where: {
+            //teacherId: // Add the class method in finding the teacher when batch is given
+            test_status: 'Scheduled'
+                //test_for_batches: // place the query to find if array contains the student's batch
+        }
+    }).then(function(testdetails) {
+        res.json(testdetails);
+    }, function(e) {
+        console.error(e);
+        return res.status(401).send();
+    });
+
+});
+
+
 
 
 
@@ -208,6 +230,31 @@ app.post('/teacher/Mybatches/:batchname', middleware.requireTeacherAuthenticatio
 
 
 
+
+
+
+
+
+
+
+
+// Creating new Test by teacher
+app.post('/teacher/createtest', middleware.requireTeacherAuthentication, function(req, res) {
+    var body = _.pick(req.body, 'test_ID', 'test_title', 'test_duration_seconds', 'test_description', 'test_window_duration_start', 'test_window_duration_end', 'test_status', 'test_for_batches', 'test_topics');
+    db.testdetail.create(body).then(function(testdetail) {
+        req.teacher.addTestdetail(testdetail).then(function() {
+            return testdetail.reload();
+        }).then(function(testDetail) {
+            res.json(testdetail.toJSON());
+        });
+    }, function(e) {
+        console.log("Not able to connect to server.js file");
+        console.error(e);
+    });
+});
+
+
+
 //initializing database models and starting server
 db.sequelize.sync().then(function() {
     app.listen(PORT, function() {
@@ -223,8 +270,6 @@ db.sequelize.sync().then(function() {
 
 
 
-
-//wire the API routes so that student can see his batch and teacher information
 
 // Let student see his profile and can logout
 

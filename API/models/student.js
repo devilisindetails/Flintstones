@@ -50,8 +50,6 @@ module.exports = function(sequelize, DataTypes) {
                     student.student_loginID = student.student_loginID.toUpperCase();
                 }
             }
-
-
         },
         instanceMethods: {
             toPublicJSON: function() {

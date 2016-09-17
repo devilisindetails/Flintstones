@@ -19,7 +19,7 @@
             background: #f2f2f2;
         }
         
-        iron-list {
+        #iron_list_student_upcomingtests {
             width: 100%;
             height: 100%;
             right: 0;
@@ -30,31 +30,7 @@
                 overflow: hidden;
             }
             ;
-        }
-        
-        .item {
-            @apply(--layout-horizontal);
-            padding: 20px;
-            background-color: white;
-            cursor: pointer;
-            margin-bottom: 10px;
-            padding: 5px;
-            border-top: 1px groove #f2f2f2;
-        }
-        
-        .item:hover {
-            color: var(--default-primary-color, );
-            border: 1px solid #000000;
-        }
-        
-        .avatar {
-            height: 40px;
-            width: 40px;
-            border-radius: 20px;
-            box-sizing: border-box;
-            background-color: #DDD;
-        }
-        
+        }  
         .listContainer {
             height: 99%;
             width: 99%;
@@ -75,127 +51,41 @@
             color: black;
         }
         
-        .item:focus {
-            outline: 0;
-            border-color: #000000;
-        }
-        
-        .item .shortversion {
-            @apply(--layout-horizontal);
-            border-radius: 8px;
-            width: 100%;
-            margin: 5px;
-            color: #59595A;
-        }
-        
-        .shortversion .ellitext {
-            list-style-position: inside;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            margin-left: 10px;
-        }
-        
-        .item-expanded .longversion {
-            display: block;
-            @apply(--layout-horizontal);
-            @apply(--flex);
-            padding: 5px;
-            border-radius: 8px;
-            height: 200px;
-        }
-        
-        .longversion .ellitext {
-            color: black;
-            white-space: normal;
-            padding-left: 10px;
-        }
-        
-        .item .longversion {
-            display: none;
-        }
-        
-        .item-expanded .shortversion {
-            display: none;
-        }
-        
-        .item p {
-            width: 20%;
-        }
-        
         .okButton {
-            background-color: var(--button-normal);
-            color: var(--color-white);
+            background-color: #001a4d;
+            color: white;
             text-align: center;
+            width: 10%;
+            height: 70%;
+            margin-top,margin-bottom:auto; 
         }
-        
-        .okButton:hover {
-            background-color: var(--button-hover);
+
+        .shortversion{        
+            @apply(--layout-flex);
+            @apply(--layout-horizontal);    
+            border: 1px solid grey;
+            text-align: center;
         }
         </style>
         <paper-card style="background:#f2f2f2;" elevation="1" class="listContainer">
             <div class="containerheader">
-                <paper-input label="Test ID" value="{{inputtestid}}" class="containerheaderitem" style="width:10%;" no-label-float></paper-input>
-                <paper-input label="Test Title" value="{{inputtitle}}" class="containerheaderitem" style="width:20%;" no-label-float></paper-input>
+                <paper-input label="Search by Test ID" value="{{search_test_ID}}" class="containerheaderitem" style="width:10%;" no-label-float></paper-input>
+                <paper-input label="Search by Test Title" value="{{search_test_title}}" class="containerheaderitem" style="width:20%;" no-label-float></paper-input>
                 <h4 class="containerheaderitem" style="width:20%; ">StartTime</h4>
                 <h4 class="containerheaderitem" style="width:20%; ">EndTime</h4>
-                <h4 class="containerheaderitem" style="width:10%; ">Status</h4>
-            </div>
-            <iron-list id="previoustests_list" items="[[items]]" selection-enabled="true" as="item" on-mouseover="onMouseOverItem">
-                <template>
-                    <div class$="[[getClassForItem(item, selected)]]" selected$="[[selected]]">
-                        <div class="shortversion">
-                            <p class="ellitext" style="width:10%;">[[item.test_id]]</p>
-                            <p class="ellitext" style="width:20%;">[[item.title]]</p>
-                            <p class="ellitext" style="width:20%;">[[item.starttime]]</p>
-                            <p class="ellitext" style="width:20%;">[[item.endtime]]</p>
-                            <p class="ellitext" style="width:10%;">[[item.type]]</p>
-                            <paper-button class="okButton" on-click="openInstructionsDialog" hidden="[[item.show]]" style="height:6vh;margin-top: 3px;">Take Test</paper-button>
-                        </div>
-                        <div class="longversion">
-                            <div style="width: 80vh;">
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Test ID : </p>
-                                    <p class="ellitext" on-click='idClicked'>[[item.test_id]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Test Title : </p>
-                                    <p class="ellitext">[[item.title]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Topics : </p>
-                                    <p class="ellitext">[[item.topics]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Duration : </p>
-                                    <p class="ellitext">[[item.duration]]</p>
-                                </div>
-                            </div>
-                            <div style="width:60vh;">
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Start Time : </p>
-                                    <p class="ellitext">[[item.starttime]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">End Time : </p>
-                                    <p class="ellitext">[[item.endtime]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">Status : </p>
-                                    <p class="ellitext">[[item.type]]</p>
-                                </div>
-                                <div class="horizontal layout">
-                                    <p class="ellitext">[[item.status]]</p>
-                                    <p class="ellitext">[[item.description]]</p>
-                                </div>
-                            </div>
-                            <div style="margin-left: 5vh;margin-top: 2vh;">
-                                <paper-button class="okButton" on-click="openInstructionsDialog" hidden="[[item.show]]" style="height:6vh;">Take Test</paper-button>
-                            </div>
-                        </div>
-                    </div>
-                </template>
+                <h4 class="containerheaderitem" style="width:15%; ">Status</h4>
+            </div> 
+        <iron-list id="iron_list_student_upcomingtests" items="{{testdetail}}">
+            <template>
+                <div class="shortversion">
+                    <p style="width:10%;">[[item.test_ID]]</p>
+                    <p style="width:20%;"">[[item.test_title]]</p>
+                    <p style="width:25%;">[[item.test_window_duration_start]]</p>
+                    <p style="width:25%;"">[[item.test_window_duration_end]]</p>
+                    <p style="width:10%;">[[item.test_status]]</p>
+                    <paper-button class="okButton" on-click="openInstructionsDialog">Take Test</paper-button>
+                </div> 
+            </template>
             </iron-list>
         </paper-card>
         <paper-dialog style="border: 3px solid #3F51B5;" id="instructions" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
@@ -206,13 +96,70 @@
                 <paper-button on-click="StarttestFunction" autofocus class="okButton" style="margin-right:auto; margin-left:auto;">Start Test</paper-button>
             </div>
         </paper-dialog>
-        <iron-ajax id="get_previoustests" url="/api/testdata" params="{{testget_Params}}" method="GET" on-response="gettest_onresponse" on-error="gettest_onerror"></iron-ajax>
-        <iron-ajax id="get_previousresponse" url="/api/testresponses" params="{{responseget_Params}}" method="GET" on-response="getresponse_onresponse" on-error="getresponse_onerror"></iron-ajax>
+        <iron-ajax id="ajax_call_get_upcoming_tests" url="/studentget/upcomingtests" method="GET" on-response="ajax_response_student_upcomingtests" on-error="gettest_onerror"></iron-ajax>
+        <!-- <iron-ajax id="get_previousresponse" url="/api/testresponses" params="{{responseget_Params}}" method="GET" on-response="getresponse_onresponse" on-error="getresponse_onerror"></iron-ajax> -->
     </template>
     <script>
     (function() {
         'use strict';
-        Polymer
+
+        Polymer({
+            is: 'student-upcomingtests',
+            properties: {
+
+                search_test_ID: {
+                    type: String,
+                    notify: true,
+                    observer: '_search_by_test_ID_changed'
+                },
+                search_test_title: {
+                    type: String,
+                    notify: true,
+                    observer: '_search_by_test_title_changed'
+                },
+                testdetail:{
+                    type:Object,
+                    notify:true
+                }
+
+            },
+            ready: function() {
+                this.$.ajax_call_get_upcoming_tests.generateRequest();
+            },
+            attached: function() {
+
+            },
+            ajax_response_student_upcomingtests: function(testdetails) {
+
+                // Converts JS object into JSON string and then into JSON object
+                this.testdetail = JSON.parse(JSON.stringify(testdetails.detail.response));
+                
+
+            },
+            ajax_error_student_upcomingtests: function() {
+
+            },
+            _search_by_test_ID_changed: function() {
+
+            },
+            search_by_test_title: function() {
+
+            },
+            openInstructionsDialog: function(e) {
+            
+                this.redirectUrl = "/studenttaketest/" + e.model.item.test_id + "/" + e.model.item.title;
+                this.$.instructions.open();
+                
+            }
+
+        });
+
+    })();
+    </script>
+</dom-module>
+
+
+Polymer
             ({
                 is: 'student-upcomingtests',
                 properties: {
@@ -504,5 +451,3 @@
                 }
             });
     })();
-    </script>
-</dom-module>
