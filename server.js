@@ -88,21 +88,63 @@ app.get('/student', middleware.requireStudentAuthentication, function(req, res) 
 
 //Requesting List of upcoming tests by student
 app.get('/studentget/upcomingtests', middleware.requireStudentAuthentication, function(req, res) {
-
-    db.testdetail.findAll({
-        where: {
-            //teacherId: // Add the class method in finding the teacher when batch is given
-            test_status: 'Scheduled'
-                //test_for_batches: // place the query to find if array contains the student's batch
-        }
-    }).then(function(testdetails) {
-        res.json(testdetails);
+    db.batch.findById(req.student.batchId).then(function(batch) {
+        db.teacher.findById(batch.teacherId).then(function(teacher) {
+            db.testdetail.findAll({
+                where: {
+                    teacherId: teacher.id,
+                    test_status: 'Scheduled',
+                    test_for_batches: { $contains: [batch.batchname] }
+                }
+            }).then(function(testdetails) {
+                res.json(testdetails);
+            }, function(e) {
+                console.error(e);
+                return res.status(401).send();
+            });
+        }, function(e) {
+            console.error(e);
+        });
     }, function(e) {
         console.error(e);
-        return res.status(401).send();
+    });
+});
+
+
+
+
+
+
+
+
+
+// Requesting Test Questions while taking test
+app.get('/studenttake/test/:test_ID',middleware.requireStudentAuthentication, function(req, res){
+
+    
+    db.testdetail.findOne({ where :
+        {test_ID : req.params.test_ID
+        }
+    }).then(function(testdetail){
+        res.json(testdetail);
+    },function(e){
+        console.error(e);
     });
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -240,12 +282,12 @@ app.post('/teacher/Mybatches/:batchname', middleware.requireTeacherAuthenticatio
 
 // Creating new Test by teacher
 app.post('/teacher/createtest', middleware.requireTeacherAuthentication, function(req, res) {
-    var body = _.pick(req.body, 'test_ID', 'test_title', 'test_duration_seconds', 'test_description', 'test_window_duration_start', 'test_window_duration_end', 'test_status', 'test_for_batches', 'test_topics');
+    var body = _.pick(req.body, 'test_ID', 'test_title', 'test_duration_seconds', 'test_description', 'test_window_duration_start', 'test_window_duration_end', 'test_status', 'test_for_batches', 'test_topics','test_questions');
     db.testdetail.create(body).then(function(testdetail) {
         req.teacher.addTestdetail(testdetail).then(function() {
             return testdetail.reload();
         }).then(function(testDetail) {
-            res.json(testdetail.toJSON());
+            res.status(200).send();
         });
     }, function(e) {
         console.log("Not able to connect to server.js file");
@@ -270,7 +312,6 @@ db.sequelize.sync().then(function() {
 
 
 
+// Add models for questions
 
-// Let student see his profile and can logout
-
-// Add models for tests & questions
+// Student can take tests and submit them

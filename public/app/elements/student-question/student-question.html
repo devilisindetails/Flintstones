@@ -20,18 +20,18 @@
         </style>
         <div class="questionContainer">
             <div>
-                <b>Question</b> : <span>{{questionNumber}}</span>
+                <b>Question</b> : <span>{{current_number_of_question}}</span>
             </div>
             <div>
-                <b>Type </b> : <span>{{questionType}}</span>
+                <b>Type </b> : <span>{{current_question_type}}</span>
             </div>
             <div>
-                <b>Marks</b> : <span>{{questionMarks}}</span>
+                <b>Marks</b> : <span>{{current_question_marks}}</span>
             </div>
         </div>
-        <p id="questionDiv" style="word-wrap: break-word;"></p>
+        <p id="questionDiv" style="word-wrap: break-word;">{{current_question_text}}</p>
         <paper-button id="ques_image_buttton" on-click="_lightboxshow" style="margin:auto;margin-right:auto;">
-            <iron-image style="height:150px;width:150px;" src={{questionImagepath}} sizing="contain">
+            <iron-image style="height:150px;width:150px;" src="{{questionimage}}" sizing="contain">
             </iron-image>
         </paper-button>
         <!-- <paper-dialog id="viewbox" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
@@ -47,60 +47,44 @@
             is: 'student-question',
 
             properties: {
-                questionText: {
-                    type: String,
-                    notify: true,
-                    observer: '_questionTextChanged' 
-                },
-                questionImagepath: {
-                    type: String,
-                    notify: true,
-                    observer: '_questionimagepathChanged'
-                },
-                questionNumber: {
-                    type: Number,
-                    notify: true
-                },
-                questionType: {
+                current_question_text: {
                     type: String,
                     notify: true
                 },
-                questionMarks: {
+                questionimage: {
+                    type: String,
+                    notify: true
+                },
+                current_number_of_question: {
                     type: Number,
                     notify: true
                 },
-                typeofquestion: {
-                    type: Array,
-                    notify: true,
-                    value: ['Single-Choice', 'Multiple-Choice']
+                current_question_type: {
+                    type: String,
+                    notify: true
                 },
-                typeSelected: {
+                current_question_marks: {
                     type: Number,
-                    value: 0,
-                    notify: true,
-                    observer: 'typeSelectedChanged' 
+                    notify: true
                 }
             },
-            _lightboxshow: function() {
+            ready:function(){
+            }
+            //_lightboxshow: function() {
                 // var dialog = document.getElementById('viewbox');
                 // if (dialog) {
                 //     dialog.open();
                 // }
-                this.domHost.on_dialogopen(this.questionImagepath);
-            },
-            _questionimagepathChanged: function() {
-                if (this.questionImagepath != null && this.questionImagepath != "") {
-                    this.$.ques_image_buttton.style.display = 'block';
-                } else {
-                    this.$.ques_image_buttton.style.display = 'none';
-                }
-            },
-            _questionTextChanged:function(){
-                this.$.questionDiv.innerHTML=this.questionText;
-            },
-            typeSelectedChanged: function(newValue, oldValue) {
-                this.questionType = this.typeofquestion[newValue];
-            }
+                //this.domHost.on_dialogopen(this.questionImagepath);
+            // },
+            // _questionimagepathChanged: function() {
+            //     if (this.current_question_image_URL != null && this.current_question_image_URL != "") {
+            //         this.$.ques_image_buttton.style.display = 'block';
+            //     } else {
+            //         this.$.ques_image_buttton.style.display = 'none';
+            //     }
+            //  }
+            
         });
     })();
     </script>

@@ -26,34 +26,43 @@ window.addEventListener('WebComponentsReady', function() {
 
     page('/', function() {
         app.route = 'upcomingtests';
-        //var tempElement = document.getElementById("upcomingtests");
-        //tempElement.autoReload();
     });
 
     page('/upcomingtests', function() {
         app.route = 'upcomingtests';
-        // var tempElement = document.getElementById("upcomingtests");
-        // tempElement.autoReload();
-    });
-    
-    page('/pasttests', function() {
-        app.route = 'pasttests';
-        // var tempElement = document.getElementById("pasttests");
-        // tempElement.autoReload();
     });
 
+    page('/pasttests', function() {
+        app.route = 'pasttests';
+    });
 
     page('/contactus', function() {
         app.route = 'contactus';
         var student_data = JSON.parse(localStorage.getItem('student_data'));
         app.$.contactus.load_teacher_contactDetails(student_data.teacher);
-
     });
 
     page('/feedback', function() {
         app.route = 'student_feedback';
     });
 
+
+    page('/test/:test_id', function(ctx) {
+        //Retrieving param from request
+        app.$.student_take_test.load_test_for_test_ID(~~ctx.params.test_id);
+        app.route = 'studenttaketest';
+    });
+
+
+
+
+
+    //  {
+
+
+    //     // var tempElement = document.getElementById("studenttaketest");
+    //     // tempElement.loadTest(data.params.test_id, data.params.test_title);
+    // });
 
 
     // page('/studenttaketest/:test_id/:test_title', function(data) {

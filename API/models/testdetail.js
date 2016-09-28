@@ -7,46 +7,64 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             validate: {
                 len: [1, 250]
-            }
+            },
+            notify:true
         },
         test_title: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 len: [1, 250]
-            }
+            },
+            notify:true
         },
         test_duration_seconds: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            notify:true
         },
         test_description: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 len: [1, 250]
-            }
+            },
+            notify:true
         },
         test_window_duration_start: {
             type: DataTypes.DATE,
-            allowNull: true
+            allowNull: true,
+            notify:true
         },
         test_window_duration_end: {
             type: DataTypes.DATE,
-            allowNull: true
+            allowNull: true,
+            notify:true
         },
         test_status: { // Should be Draft , Submitted
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: "Draft"
+            defaultValue: "Draft",
+            notify:true
         },
         test_for_batches: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            allowNull: false
+            allowNull: false,
+            notify:true
         },
         test_topics: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            allowNull: false
+            allowNull: false,
+            notify:true
+        },
+        test_questions:{
+            type:DataTypes.ARRAY(DataTypes.JSON),
+            allowNull:true,
+            notify:true
+        },
+        test_answer_key:{
+            type:DataTypes.ARRAY(DataTypes.BOOLEAN),
+            notify:true
         }
 
     }, {
@@ -59,55 +77,4 @@ module.exports = function(sequelize, DataTypes) {
     return testdetail;
 };
 
-// "properties": {
-//     "test_id": {
-//       "type": "string",
-//       "required": true
-//     },
-//     "title": {
-//       "type": "string",
-//       "required": true
-//     },
-//     "duration_seconds": {
-//       "type": "number"
-//     },
-//     "batches": {
-//       "type": [
-//         "string"
-//       ],
-//       "required": true
-//     },
-//     "topics": {
-//       "type": [
-//         "string"
-//       ]
-//     },
-//     "description": {
-//       "type": "string"
-//     },
-//     "window_start": {
-//       "type": "date"
-//     },
-//     "window_stop": {
-//       "type": "date"
-//     },
-//     "status": {
-//       "type": "string"
-//     },
-//     "coaching_id": {
-//       "type": "string",
-//       "required": true
-//     },
-//     "questions": {
-//       "type": "object"
-//     },
-//     "date_updated": {
-//       "type": "date"
-//     },
-//     "teacher_id": {
-//       "type": "string"
-//     },
-//     "instructions": {
-//       "type": "string"
-//     }
-//   },
+

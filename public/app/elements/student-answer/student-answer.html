@@ -17,10 +17,10 @@
         }
         
         #answer_checkbox {
-            font-family:'Helvetica', 'Arial';
+            font-family: 'Helvetica', 'Arial';
             margin-bottom: 10px;
-            margin-right:0.1em; 
-            width:8vw;
+            margin-right: 0.1em;
+            width: 8vw;
         }
         </style>
         <div class="answer">
@@ -60,15 +60,13 @@
                     type: Boolean,
                     value: false,
                     notify: true,
-                    observer: '_markedChanged'
+                    observer: '_option_checked_status_changed'
                 }
             },
             listeners: {
-                'change': 'change_answerstatus'
+                'change':'_option_checked_status_changed'
             },
-            change_answerstatus: function() {
-                this.marked_answer = this.$.answer_checkbox.checked;
-            },
+
             _lightboxshow: function() {
                 this.domHost.on_dialogopen(this.answer_image);
             },
@@ -82,15 +80,12 @@
                     this.$.ans_image_buttton.style.display = 'none';
                 }
             },
-            _markedChanged: function() {
-                this.$.answer_checkbox.checked = this.marked_answer;
+            _option_checked_status_changed: function() {
 
+                this.marked_answer = this.$.answer_checkbox.checked;
             },
-            _changeState: function() {
-                this.$.answer_checkbox.disabled = true;
-            },
-            _answerTextChanged: function(){
-                this.$.answerDiv.innerHTML=this.answer_text;
+            _answerTextChanged: function() {
+                this.$.answerDiv.innerHTML = this.answer_text;
             }
         });
     })();

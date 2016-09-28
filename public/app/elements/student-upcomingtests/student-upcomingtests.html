@@ -83,21 +83,20 @@
                     <p style="width:25%;">[[item.test_window_duration_start]]</p>
                     <p style="width:25%;"">[[item.test_window_duration_end]]</p>
                     <p style="width:10%;">[[item.test_status]]</p>
-                    <paper-button class="okButton" on-click="openInstructionsDialog">Take Test</paper-button>
+                    <paper-button class="okButton" on-click="instructions_before_starting_test">Take Test</paper-button>
                 </div> 
             </template>
             </iron-list>
         </paper-card>
-        <paper-dialog style="border: 3px solid #3F51B5;" id="instructions" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <paper-dialog style="border: 3px solid #3F51B5;" id="instructions_before_starting_tests" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
             <paper-dialog-scrollable style="margin-top: 0;">
                 <student-instructions></student-instructions>
             </paper-dialog-scrollable>
             <div class="buttons">
-                <paper-button on-click="StarttestFunction" autofocus class="okButton" style="margin-right:auto; margin-left:auto;">Start Test</paper-button>
+                <paper-button on-click="student_OK_with_instructions_before_test" autofocus class="okButton" style="margin-right:auto; margin-left:auto;">Start Test</paper-button>
             </div>
         </paper-dialog>
-        <iron-ajax id="ajax_call_get_upcoming_tests" url="/studentget/upcomingtests" method="GET" on-response="ajax_response_student_upcomingtests" on-error="gettest_onerror"></iron-ajax>
-        <!-- <iron-ajax id="get_previousresponse" url="/api/testresponses" params="{{responseget_Params}}" method="GET" on-response="getresponse_onresponse" on-error="getresponse_onerror"></iron-ajax> -->
+        <iron-ajax id="ajax_call_get_upcoming_tests" url="/studentget/upcomingtests" method="GET" on-response="ajax_response_student_upcomingtests" on-error="ajax_error_student_upcomingtests"></iron-ajax>
     </template>
     <script>
     (function() {
@@ -120,10 +119,15 @@
                 testdetail:{
                     type:Object,
                     notify:true
+                },
+                take_test_of_test_ID:{
+                    type:String,
+                    notify:true
                 }
 
             },
             ready: function() {
+
                 this.$.ajax_call_get_upcoming_tests.generateRequest();
             },
             attached: function() {
@@ -133,26 +137,29 @@
 
                 // Converts JS object into JSON string and then into JSON object
                 this.testdetail = JSON.parse(JSON.stringify(testdetails.detail.response));
-                
-
             },
             ajax_error_student_upcomingtests: function() {
 
             },
             _search_by_test_ID_changed: function() {
-
+                console.log("Yet to be implemented");
             },
-            search_by_test_title: function() {
-
+            _search_by_test_title_changed: function() {
+                console.log("Yet to be implemented");
             },
-            openInstructionsDialog: function(e) {
-            
-                this.redirectUrl = "/studenttaketest/" + e.model.item.test_id + "/" + e.model.item.title;
-                this.$.instructions.open();
+            instructions_before_starting_test: function(e) {
                 
+                // Getting event e of which item is pressed in Iron list
+                this.$.instructions_before_starting_tests.open();
+                this.take_test_of_test_ID = e.model.item.test_ID;                
+            },
+            student_OK_with_instructions_before_test:function(test_ID){
+                this.$.instructions_before_starting_tests.close();
+                // Using pageJS to navigate from one page to another
+                page('/student/test/' + this.take_test_of_test_ID);
             }
 
-        });
+        })
 
     })();
     </script>

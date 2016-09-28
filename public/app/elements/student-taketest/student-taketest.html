@@ -140,16 +140,17 @@
         <div class="student_container">
             <div class="student_firstdiv">
                 <paper-material elevation="1" class="top_container">
-                    <div style="width:20vw;" class="horizontal start-justified layout"><b>Test ID :</b> <span style="padding-left:5px;text-transform: uppercase;">{{testId}}</span></div>
-                    <div style="width:40vw; text-overflow: ellipsis;" class="horizontal end-justified layout"><span style="width:6vw;"><b>Test Title :</b> </span><span style="padding-left:5px;text-transform: uppercase;text-overflow: ellipsis; ">{{testTitle}}</span></div>
+                    <div style="width:20vw;" class="horizontal start-justified layout"><b>Test ID :</b> <span style="padding-left:5px;text-transform: uppercase;">{{test_ID }}</span></div>
+                    <div style="width:40vw; text-overflow: ellipsis;" class="horizontal end-justified layout"><span style="width:6vw;"><b>Test Title :</b> </span><span style="padding-left:5px;text-transform: uppercase;text-overflow: ellipsis; ">{{test_title}}</span></div>
                 </paper-material>
                 <paper-material class="main_container" elevation="1">
                     <div class="layout vertical justified" style="border-bottom: 2px solid #ccccff;">
-                        <student-question id="studentquestion" question-number="{{currentquestion}}" question-text="{{questiontext}}" question-imagepath="{{questionimage}}" type-selected="{{typeselected}}" question-marks="{{questionmarks}}"></student-question>
+                    
+                        <student-question id="studentquestion" current_number_of_question ="{{current_number_of_question}}" current_question_text="{{current_question_text}}" questionimage="{{current_question_image_URL}}" current_question_type="{{current_question_type}}" current_question_marks="{{current_question_marks}}"></student-question>
                     </div>
                     <div style="margin:-5px; margin-top:5px;">
                         <paper-item style="color:black; margin:-5px; margin-top:-10px; padding-left:10px;" disabled><b>Options :</b></paper-item>
-                        <div id="student_answerbox" class="layout vertical justified" style="margin:-5px;padding:0px;overflow-x:hidden;"></div>
+                        <div id="current_answer_container" class="layout vertical justified" style="margin:-5px;padding:0px;overflow-x:hidden;"></div>
                     </div>
                 </paper-material>
                 <paper-material class="bottom_container" elevation="1">
@@ -161,13 +162,13 @@
             <div class="seconddiv">
                 <div class="layout vertical">
                     <paper-material id="timer" elevation="1" class="horizontal layout center" style="height:8vh;padding-left:10px;padding-right:10px;">
-                        <div style="width:100%;" class="horizontal start-justified layout"><b><span style="padding:2px; margin-right:3px;">{{timeLeft}}</span></b>
+                        <div style="width:100%;" class="horizontal start-justified layout"><b><span style="padding:2px; margin-right:3px;">{{test_time_remaining}}</span></b>
                         </div>
-                        <div style="width:100%;" class="horizontal end-justified layout"><b>Attempted:</b><span style="margin-left:2px;">{{attemptedQuestions}}</span>
+                        <div style="width:100%;" class="horizontal end-justified layout"><b>Attempted:</b><span style="margin-left:2px;">{{number_of_questions_attempted}}</span>
                         </div>
                     </paper-material>
                     <paper-material id="questionpalette" style="border-radius:3px;max-height:400px;overflow-y:auto;padding-bottom:0; ">
-                        <student-questionpalette id="palette1" current-question="{{currentquestion}}" numberof-questions={{totalQuestions}}></student-questionpalette>
+                        <student-questionpalette id="student_questionpalette" total_number_of_questions ={{total_number_of_questions}} current_number_of_question={{current_number_of_question}}></student-questionpalette>
                         <div class="legend" style="margin-bottom: 0;margin-left:8px;padding:0;padding-top: 10%;">
                             <div class="vertical layout" style="margin-bottom:0;margin-left: 0;padding-left:0;height:45px; margin-bottom:-20px;">
                                 <div id="divlegend">
@@ -213,30 +214,243 @@
                     <paper-button class="okButton" dialog-dismiss autofocus>No</paper-button>
                 </div>
             </paper-dialog>
-            <!-- ajax call starts here -->
-            <!-- ajax call to get the test question starts here -->
-            <iron-ajax id="student_testget_ironajax" url="/api/testdata/" handle-as="json" content-type='application/json' params="{{testget_Params}}" method="GET" on-response="testgetonResponse" on-error="onError"></iron-ajax>
-            <!-- ajax call to get the test question ends here -->
-            <!-- ajax to get test response starts here -->
-            <iron-ajax id="responseget_ironajax" url="/api/testresponses/" handle-as="json" content-type='application/json' method="GET" params="{{responseget_Params}}" on-response="responsegetonResponse" on-error="onError"></iron-ajax>
-            <!-- ajax to get test response ends here -->
-            <!-- ajax call to update questions starts here -->
-            <iron-ajax id="responseupdate_ironajax" url="/api/testresponses/update" handle-as="json" content-type='application/json' params="{{responseupdate_params}}" method="POST" body="{{responseupdate_body}}" on-response="responseupdateonResponse" on-error="responseupdateonError"></iron-ajax>
-            <!-- ajax call to update questions ends here -->
-            <!-- ajax call to submit test starts here -->
-            <iron-ajax id="responsesubmit_ironajax" url="/api/testresponses/update" handle-as="json" content-type='application/json' params="{{responseupdate_params}}" method="POST" body="{{responseupdate_body}}" on-response="responsesubmitonResponse" on-error="responsesubmiteonError"></iron-ajax>
-            <!-- ajax call to submit test ends here -->
-            <!-- For posting the create test starts here -->
-            <iron-ajax id="createresponse_ironajax" url="/api/testresponses/" handle-as="json" content-type='application/json' method="POST" body="{{createresponse_postbody}}" on-response="_createresponseonResponse" on-error="_createresponseonError"></iron-ajax>
-            <!-- For posting the create test ends here -->
-            <!-- ajax call ends here -->
+            
+            <iron-ajax id="ajax_call_get_test_detail" url={{ajax_URL_get_test_detail}} handle-as="json" content-type='application/json' method="GET" on-response="ajax_response_get_test_detail" on-error="ajax_error_get_test_detail"></iron-ajax>
+
+
+            
     </template>
     <script>
     (function() {
         'use strict';
         Polymer({
             is: 'student-taketest',
-            properties: {
+            properties:{
+                test_ID:{
+                    type:String,
+                    notify:true
+                },
+                test_title:{
+                    type:String,
+                    notify:true
+                },
+                test_time_remaining:{
+                    type:Number,
+                    notify:true
+                },
+                number_of_questions_attempted:{
+                    type:Number,
+                    notify:true
+                },
+                test_total_questions:{
+                    type:Number,
+                    notify:true
+                },
+                ajax_URL_get_test_detail:{
+                    type:String,
+                    notify:true
+                },
+                test_detail_object:{
+                    type:Object,
+                    notify:true
+                },
+                total_number_of_questions:{
+                    type:Number,
+                    notify:true
+                },
+                current_number_of_question:{
+                    type:Number,
+                    notify:true,
+                    observer:'_current_number_of_question_changed'
+                },
+                current_question_type:{
+                    type:String,
+                    notify:true
+                },
+                current_question_image_URL:{
+                    type:String,
+                    notify:true
+                },
+                current_question_marks:{
+                    type:Number,
+                    notify:true,
+                    value:100
+                },
+                current_question_text:{
+                    type:Number,
+                    notify:true
+                },
+                current_question_response:{
+                    type:Array,
+                    notify:true,
+                    value: []
+                },
+                studentResponse:{
+                    type:Array,
+                    notify:true,
+                    value:[]
+                }
+
+
+            },
+            ready:function(){
+
+                
+                
+            },
+            load_test_for_test_ID:function(test_ID){
+
+                // Created the URL as could not get ajax params working.The URL will be 
+                // used at server end to break it into required parameter (test_ID)
+                this.ajax_URL_get_test_detail = "/studenttake/test/" + test_ID; 
+
+                // Generate request as one presses 'Take Test' on client side
+                this.$.ajax_call_get_test_detail.generateRequest();
+                                
+            },
+            ajax_response_get_test_detail:function(testdetail){
+                // Parsing JS object into JSON string and then JSON object    
+                this.test_detail_object = JSON.parse(JSON.stringify(testdetail.detail.response));
+                // Setting up various values for corresponding properties
+                this.test_ID = this.test_detail_object.test_ID;
+                this.test_title = this.test_detail_object.test_title;
+                this.total_number_of_questions = this.test_detail_object.test_questions.length;
+                // Populating question palette
+                this.$.student_questionpalette.load_question_palette();
+                // Assigning the user to see first question
+                this.current_number_of_question= 1;
+               
+            },
+            ajax_error_get_test_detail:function(e){
+                console.error(e);
+            },
+            save_response_of_current_question_localObject: function(question_number){
+            // Checking to makes sure not fired away as soon as one logs in
+            if (this.$.current_answer_container.childNodes.length>0) {
+                this.current_question_response = [];
+                for (var i = 1; i <=this.test_detail_object.test_questions[question_number - 1].options.length ; i++) {
+            //Pushing response into array
+          //  var tempNodeElement = this.$.current_answer_container.childNodes[i-1];
+             this.current_question_response[i-1] = this.$.current_answer_container.childNodes[i-1].$.answer_checkbox.checked;
+                }
+            // Saving individual responses in a larger array
+            this.studentResponse[question_number - 1] = this.current_question_response 
+            // Saving the larger response Array in to local object
+            // if (typeof(Storage) !== "undefined") {
+            // localStorage.setItem("StudentResponse", this.studentResponse);
+            // } else {
+            //     console.log("No local storage available for browser");
+            // }    
+                  }
+            },
+            _current_number_of_question_changed:function(new_question_number,previous_question_number){
+
+                
+                this.save_response_of_current_question_localObject(previous_question_number);
+                // Storing the question text from AJAX response
+                this.current_question_text = this.test_detail_object.test_questions[new_question_number - 1].questionText;
+                //Storing question type 
+                this.current_question_type = this.test_detail_object.test_questions[new_question_number - 1].questionType;
+                //Storing question marks
+                this.current_question_marks = this.test_detail_object.test_questions[new_question_number - 1].questionMarks;
+                //Storing question image
+                this.current_question_image_URL = this.test_detail_object.test_questions[new_question_number - 1].questionImage;
+                //To append options , their text and their images, call below method
+                this.append_current_options();
+
+            },
+
+            append_current_options:function(){
+
+                //Removing the child nodes of the answer container
+                while (this.$.current_answer_container.firstChild) {
+                    this.$.current_answer_container.removeChild(this.$.current_answer_container.firstChild);
+                }
+
+                //Append the options in the answer container
+                for (var i = 1; i <= this.test_detail_object.test_questions[0].options.length; i++) {
+                    // Create variable to store newly created option
+                    var student_option_element = document.createElement("student-answer");
+                    //setting the option number
+                    student_option_element.option_number = i;
+                    //setting the option text
+                    student_option_element.answer_text = this.test_detail_object.test_questions[this.current_number_of_question - 1].options[i-1].optionText;
+                    //setting the option image
+                    student_option_element.answer_image = this.test_detail_object.test_questions[this.current_number_of_question - 1].options[i-1].optionImage;
+                    //Setting the options selected be true or false
+
+
+                 if( typeof this.studentResponse[this.current_number_of_question - 1] !== "undefined" ){
+
+            
+                    student_option_element.$.answer_checkbox.checked = this.studentResponse[this.current_number_of_question -1][i-1];
+                    
+                    }
+                    
+                    //Highlight the alternate options
+                    if (student_option_element.option_number % 2 == 0)
+                    {
+                        student_option_element.style.background = "white";
+                    }
+                    else
+                    {
+                        student_option_element.style.background = "#e6f9ff";
+                    }
+
+                    this.$.current_answer_container.appendChild(student_option_element);
+                }
+
+            }
+        })
+    })();
+    </script>
+</dom-module>
+
+
+
+
+<!-- Note:
+1. Code for different states of button
+    a. A -- Attempted.
+    b. U -- UnAttempted.
+    c. RU -- Marked for review and UnAttempted.
+    d. RA -- MArked for review and Attempted.
+ -->
+
+<!-- ajax call starts here -->
+            <!-- ajax call to get the test question starts here -->
+           <!--  <iron-ajax id="student_testget_ironajax" url="/api/testdata/" handle-as="json" content-type='application/json' params="{{testget_Params}}" method="GET" on-response="testgetonResponse" on-error="onError"></iron-ajax> -->
+            <!-- ajax call to get the test question ends here -->
+            <!-- ajax to get test response starts here -->
+            <!-- <iron-ajax id="responseget_ironajax" url="/api/testresponses/" handle-as="json" content-type='application/json' method="GET" params="{{responseget_Params}}" on-response="responsegetonResponse" on-error="onError"></iron-ajax> -->
+            <!-- ajax to get test response ends here -->
+            <!-- ajax call to update questions starts here -->
+            <!-- <iron-ajax id="responseupdate_ironajax" url="/api/testresponses/update" handle-as="json" content-type='application/json' params="{{responseupdate_params}}" method="POST" body="{{responseupdate_body}}" on-response="responseupdateonResponse" on-error="responseupdateonError"></iron-ajax> -->
+            <!-- ajax call to update questions ends here -->
+            <!-- ajax call to submit test starts here -->
+            <!-- <iron-ajax id="responsesubmit_ironajax" url="/api/testresponses/update" handle-as="json" content-type='application/json' params="{{responseupdate_params}}" method="POST" body="{{responseupdate_body}}" on-response="responsesubmitonResponse" on-error="responsesubmiteonError"></iron-ajax> -->
+            <!-- ajax call to submit test ends here -->
+            <!-- For posting the create test starts here -->
+            <!-- <iron-ajax id="createresponse_ironajax" url="/api/testresponses/" handle-as="json" content-type='application/json' method="POST" body="{{createresponse_postbody}}" on-response="_createresponseonResponse" on-error="_createresponseonError"></iron-ajax> -->
+            <!-- For posting the create test ends here -->
+            <!-- ajax call ends here -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+properties: {
                 getquestion_object: {
                     notify: true
                 },
@@ -812,15 +1026,3 @@
                     app.$.instructions.open();
                 }
                 // function to view instructions ends here
-
-        });
-    })();
-    </script>
-</dom-module>
-<!-- Note:
-1. Code for different states of button
-    a. A -- Attempted.
-    b. U -- UnAttempted.
-    c. RU -- Marked for review and UnAttempted.
-    d. RA -- MArked for review and Attempted.
- -->

@@ -41,12 +41,11 @@
         Polymer({
             is: 'student-questionpalette',
             properties: {
-                totalquestions: {
-                    type: String,
-                    value: 0,
+                total_number_of_questions: {
+                    type: Number,
                     notify: true
                 },
-                currentQuestion: {
+                current_number_of_question: {
                     type: Number,
                     notify: true
                 },
@@ -55,7 +54,43 @@
                     value: []
                 }
             },
-            attached: function() {},
+            load_question_palette: function(){
+
+                    while (this.$.student_questions.hasChildNodes()) {
+                this.$.student_questions.removeChild(this.$.student_questions.firstChild);
+                }
+
+                     for (var i=1; i <= this.total_number_of_questions; i++) {
+                        
+                        var customElement = document.createElement("paper-fab");
+                        customElement.label = i;
+                        customElement.style.background = "white";
+                        customElement.mini = true;
+                        customElement.style.margin = "1px";
+                        customElement.addEventListener('tap', this._listner_for_tapping_paper_fab);
+                        this.$.student_questions.appendChild(customElement);
+                }
+
+            },
+            _listner_for_tapping_paper_fab: function(e) {
+                var target = e.target || window.event.srcElement;
+                if (target.parentNode["label"] != undefined) {
+                    this.domHost.current_number_of_question = target.parentNode["label"];
+                }
+            }
+
+
+            
+        });
+    })();
+    </script>
+</dom-module>
+
+
+
+
+
+attached: function() {},
             defaultScreen: function() {
                 this.totalquestions = 0;
                 this.dyel = [];
@@ -78,12 +113,7 @@
                 this.dyel[this.totalquestions].addEventListener('tap', this._handleonclick);
                 this.$.student_questions.appendChild(this.dyel[this.totalquestions]);
             },
-            _handleonclick: function(e) {
-                var target = e.target || window.event.srcElement;
-                if (target.parentNode["label"] != undefined) {
-                    this.domHost.currentQuestion = target.parentNode["label"];
-                }
-            },
+            ,
             _changeColor: function(button_state, no) {
                 if (button_state == "A") {
                     this.dyel[no].style.background = "#b3c6ff";
@@ -106,7 +136,3 @@
                 var el = this.dyel[no];
                 el.focus();
             }
-        });
-    })();
-    </script>
-</dom-module>
